@@ -1,0 +1,13 @@
+.selected
+{
+	background: yellow
+}
+
+.block {
+	display: inline-block;
+	vertical-align: top;
+}
+
+h4 {
+	text-align: center;
+}
