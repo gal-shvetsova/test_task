@@ -13,7 +13,7 @@ export class TaskList extends Component {
 
   componentDidMount(){
     const getTask = this.props.getTask;
-    fetch('http://localhost:80/task/')
+    fetch('task/')
       .then(response => response.json())
       .then(v => getTask(v));
     document.addEventListener('mousedown', this.handleClickOutside);
@@ -49,11 +49,11 @@ export class TaskList extends Component {
 
   handleDelete(task) {
     const {getTask} = this.props;
-    fetch('http://localhost:80/task/', {
+    fetch('task/', {
       method : "DELETE",
       body : JSON.stringify(task)
     }).then(()=>{
-      fetch('http://localhost:80/task/?USER_ID=' + task.USER_ID)
+      fetch('task/?USER_ID=' + task.USER_ID)
       .then(response => response.json())
       .then(v => getTask(v));
     });

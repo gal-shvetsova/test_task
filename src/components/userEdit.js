@@ -17,11 +17,11 @@ export  class UserEdit extends Component {
   handleSubmit() {
     const {user, getUser} = this.props;
     const method = user.ID ?  "PUT" : "POST";
-    fetch('http://localhost:80/user/', {
+    fetch('user/', {
       method,
       body : JSON.stringify(user)})
       .then(()=>{
-        fetch('http://localhost:80/user/' )
+        fetch('user/' )
         .then(response => response.json())
         .then(v => getUser(v));
     });

@@ -19,11 +19,11 @@ export  class TaskEdit extends Component {
     const {task, getTask} = this.props;
     var method = this.props.task.ID ?  "PUT" : "POST";
     if (!task) method = "POST";
-    fetch('http://localhost:80/task/', {
+    fetch('task/', {
       method,
       body : JSON.stringify(task)})
       .then(()=>{
-        fetch('http://localhost:80/task/?USER_ID='+ task.USER_ID )
+        fetch('task/?USER_ID='+ task.USER_ID )
         .then(response => response.json())
         .then(v => getTask(v,task.USER_ID));
       });

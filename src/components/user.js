@@ -9,7 +9,7 @@ export class UserList extends Component {
   constructor(props) {
     super(props);
     const getUser = this.props.getUser;
-    fetch('http://localhost:80/user/')
+    fetch('user/')
     .then(response => response.json())
     .then(v => getUser(v));
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -53,12 +53,12 @@ export class UserList extends Component {
 
   handleDelete(user) {
     const {getUser} = this.props;
-    fetch('http://localhost:80/user/', {
+    fetch('user/', {
       method : "DELETE",
       body : JSON.stringify(user)
     })
     .then(() => {
-      fetch('http://localhost:80/user/' )
+      fetch('user/' )
       .then(response => response.json())
       .then(v => getUser(v));
     });
@@ -88,7 +88,7 @@ export class UserList extends Component {
     return () => {
       this.props.getUserEdit({}, false);
       this.props.selectUser(USER_ID);
-      fetch('http://localhost:80/task/?USER_ID='+USER_ID)
+      fetch('task/?USER_ID='+USER_ID)
         .then(response => response.json())
         .then(v => getTask(v, USER_ID));
       getTaskEdit({USER_ID : USER_ID}, -1, false);
