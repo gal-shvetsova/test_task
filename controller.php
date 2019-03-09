@@ -5,7 +5,7 @@
     header('Content-Type: application/json');
 	
     include_once("config.php");
-    ($db = mysqli_connect($host, $user, $password, $database))or die("Ошибка ". $db. "kk" . mysqli_connect_error($db));
+    $db = mysqli_connect($host, $user, $password, $database) or die("Ошибка " . mysqli_connect_error($db));
     init($db);
 
     switch ($_SERVER['REQUEST_METHOD']) {
