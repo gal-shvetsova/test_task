@@ -26,6 +26,8 @@ export class UserList extends Component {
 
   createUserList() {
     const {users, selectedUser} = this.props; 
+        console.log("users",users);
+
     return users ?
     (
       <table border = "1">
@@ -52,7 +54,7 @@ export class UserList extends Component {
   }
 
   handleDelete(user) {
-    const {getUser} = this.props;
+    const {getUser, getConformity} = this.props;
     fetch('user/', {
       method : "DELETE",
       body : JSON.stringify(user)
@@ -61,7 +63,13 @@ export class UserList extends Component {
       fetch('user/' )
       .then(response => response.json())
       .then(v => getUser(v));
-    });
+    })
+    .then(()=>{
+          fetch('/main')
+          .then(response => response.json())
+          .then(v => getConformity(v))
+        }
+        );
   }
 
   userEdit(props,button){
@@ -103,10 +111,11 @@ export class UserList extends Component {
     const taskList = document.getElementsByClassName("taskList")[0];
     const taskEdit = document.getElementsByClassName("taskEdit")[0];
     const userEdit = document.getElementsByClassName("userEdit")[0];
-      
+
     if (!event.path.includes(taskList) && !event.path.includes(taskEdit) && !event.path.includes(userEdit)) {
       if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
         this.props.selectUser(-1);
+        this.props.selectTask(-1);
         this.props.getTask({}, -1, false);
         this.props.getUserEdit({}, false);
         this.props.getTaskEdit({}, -1, false);
@@ -142,7 +151,9 @@ const mapDispatchToProps = function (dispatch) {
     getUser : actionCreators.getUser,
     getTask : actionCreators.getTask,
     getTaskEdit : actionCreators.getTaskEdit,
-    selectUser : actionCreators.selectUser
+    selectUser : actionCreators.selectUser,
+    selectTask : actionCreators.selectTask,
+    getConformity : actionCreators.getConformity
   }, dispatch)
 }
 

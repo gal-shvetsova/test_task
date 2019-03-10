@@ -7,22 +7,15 @@ export class TaskList extends Component {
 
   constructor(props){
     super(props);
-    this.setWrapperRef = this.setWrapperRef.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
   componentDidMount(){
-    const getTask = this.props.getTask;
+    const {getTask} = this.props;
     fetch('task/')
       .then(response => response.json())
-      .then(v => getTask(v));
-    document.addEventListener('mousedown', this.handleClickOutside);
+      .then(v => getTask(v))
   }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
-
+  
   createTaskList() {
     const {tasks, selectedTask, selectTask} = this.props;
     return  (
@@ -48,7 +41,7 @@ export class TaskList extends Component {
 
 
   handleDelete(task) {
-    const {getTask} = this.props;
+    const {getTask, getConformity} = this.props;
     fetch('task/', {
       method : "DELETE",
       body : JSON.stringify(task)
@@ -56,7 +49,12 @@ export class TaskList extends Component {
       fetch('task/?USER_ID=' + task.USER_ID)
       .then(response => response.json())
       .then(v => getTask(v));
-    });
+    }).then(()=>{
+          fetch('/main')
+          .then(response => response.json())
+          .then(v => getConformity(v))
+        }
+    );
 
   }
 
@@ -77,30 +75,11 @@ export class TaskList extends Component {
   }
     
   taskSelected(ID, selectTask){
+    this.props.getUserEdit({}, false);
     return () => {
       selectTask(ID);
     };  
   }
-
-  setWrapperRef(node) {
-    this.wrapperRef = node;
-  }
-
-  handleClickOutside(event) {
-    const taskEdit = document.getElementsByClassName("taskEdit")[0];
-    const taskList = document.getElementsByClassName("taskList")[0];
-
-    if (!event.path.includes(taskEdit) && !event.path.includes(taskList)) {
-      if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-        this.props.selectTask(-1);
-        this.props.getTask(null, false);
-        this.props.getTaskEdit({}, -1, false);
-        this.props.userID = -1;
-        this.props.selectedTask = -1;
-      }
-    }
-  }
-
 
   render() {
     return(
@@ -132,9 +111,11 @@ const mapStateToProps = function(state){
 
 const mapDispatchToProps = function (dispatch) {
   return bindActionCreators({
+    getUserEdit : actionCreators.getUserEdit,
     getTaskEdit : actionCreators.getTaskEdit,
     getTask : actionCreators.getTask,
     selectTask : actionCreators.selectTask,
+                getConformity : actionCreators.getConformity
   }, dispatch)
 }
 

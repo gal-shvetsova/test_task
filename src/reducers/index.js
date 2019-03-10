@@ -36,8 +36,16 @@ const userEditStore = (state={user : {}, show : false}, action) => {
       default: return state
     }
 }
+
+const mainTableStore = (state={conformity : []}, action) => {
+    switch (action.type) {
+      case 'GET_CONFORMITY':
+        return {...state, conformity : action.conformity}
+      default: return state
+    }
+}
 const rootReducer = combineReducers({
-    userStore, taskStore, userEditStore, taskEditStore
+    userStore, taskStore, userEditStore, taskEditStore, mainTableStore
 });
 
 export default rootReducer;

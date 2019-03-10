@@ -1,4 +1,4 @@
- export function getUser(users) {
+     export function getUser(users) {
     return {
         type: 'GET_USER',
         users
@@ -41,5 +41,12 @@ export function getTask(tasks, userID) {
         type: 'GET_TASK',
         ...tasks,
         userID
+    }
+}
+
+export function getConformity(conformity) {
+    return {
+        type: 'GET_CONFORMITY',
+        conformity
     }
 }

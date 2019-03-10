@@ -9,5 +9,25 @@
 }
 
 h4 {
-	text-align: center;
+	text-align: left;
+}
+
+.taskEdit {
+	display :inline-block;
+	border: 4px double black; 
+    padding: 10px;
+}
+
+.userEdit {
+	display :inline-block;
+	border: 4px double black; 
+    padding: 10px;
+}
+
+.MainTable{
+	margin: 0;
+    position: absolute;
+    top: 0%;
+    left: 300px;
+    margin-right: -50%;
 }

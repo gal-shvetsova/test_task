@@ -8,6 +8,7 @@ export  class TaskEdit extends Component {
 
   handleChange(field) {
     const {task, getTaskEdit} = this.props;
+    this.props.getUserEdit({}, false);
     return (event) => {
       const change = {};
       change[field] = event.target.value;
@@ -16,7 +17,7 @@ export  class TaskEdit extends Component {
   }
 
   handleSubmit() {
-    const {task, getTask} = this.props;
+    const {task, getTask, getConformity} = this.props;
     var method = this.props.task.ID ?  "PUT" : "POST";
     if (!task) method = "POST";
     fetch('task/', {
@@ -26,7 +27,13 @@ export  class TaskEdit extends Component {
         fetch('task/?USER_ID='+ task.USER_ID )
         .then(response => response.json())
         .then(v => getTask(v,task.USER_ID));
-      });
+      })
+      .then(()=>{
+          fetch('/main')
+          .then(response => response.json())
+          .then(v => getConformity(v));
+        }
+      );
       this.hide();
   }
 
@@ -37,24 +44,19 @@ export  class TaskEdit extends Component {
   render() {
     const task = this.props.task;
       return (
-      this.props.show ?
-      <table className = "taskEdit" border = "1">
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Hardness</th>
-            <th>Actions</th>  
-          </tr>
-          <tr>
-            <td className = "name"> <input  type="text"  value={task.NAME || ""}  onChange={this.handleChange("NAME")}></input> </td>
-            <td className = "description"> <input  type="text"  value={task.DESCRIPTION || ""}  onChange={this.handleChange("DESCRIPTION")}></input> </td>
-            <td className = "hardness"> <input  type="text"  value={task.HARDNESS || ""}  onChange={this.handleChange("HARDNESS")}></input> </td>
-            <td className = "button"> <button  type="number"   className="ok" onClick={this.handleSubmit.bind(this)}>ok</button> 
-            <button className="cancel" onClick={this.hide.bind(this)}>cancel</button> </td>
-          </tr>
-        </tbody>
-      </table> : "" );
+      this.props.show ? (
+        <div className = "taskEdit">
+          <p>Name</p>
+          <input  type="text" value={task.NAME || ""}  onChange={this.handleChange("NAME")}></input>
+          <p>Description</p>
+          <input  type="text"  value={task.DESCRIPTION || ""}  onChange={this.handleChange("DESCRIPTION")}></input> 
+          <p>Hardness</p>
+          <input  type="text"  value={task.HARDNESS || ""}  onChange={this.handleChange("HARDNESS")}></input> 
+          <p></p>
+          <button  type="number"   className="ok" onClick={this.handleSubmit.bind(this)}>ok</button> 
+          <button className="cancel" onClick={this.hide.bind(this)}>cancel</button> 
+        </div>)
+      : "" );
   }
 }
 
@@ -69,7 +71,9 @@ const mapStateToProps = function(state){
 const mapDispatchToProps = function (dispatch) {
   return bindActionCreators({
     getTaskEdit : actionCreators.getTaskEdit,
-    getTask : actionCreators.getTask
+    getUserEdit : actionCreators.getUserEdit,
+    getTask : actionCreators.getTask,
+            getConformity : actionCreators.getConformity
   }, dispatch)
 }
 
