@@ -4,7 +4,7 @@
 		$result = mysqli_query($data_base, $query) or die("Ошибка " . mysqli_error($data_base));
     	$arr = $result->fetch_all(MYSQLI_ASSOC);
     	$i = 0;
-    	while ($arr[$i]) {
+    	while ($i < count($arr)) {
     		$query = "SELECT ID FROM TASKS WHERE USER_ID = '".$arr[$i]["ID"]."'";
     		$result = mysqli_query($data_base, $query) or die("Ошибка " . mysqli_error($data_base));
     		$tasks =  $result->fetch_all(MYSQLI_ASSOC);
