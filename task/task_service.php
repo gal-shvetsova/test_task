@@ -1,30 +1,33 @@
 <?php
 
 	function getHandler($data_base){
-		$query ="SELECT * FROM TASKS WHERE USER_ID = '".$_GET['USER_ID']."'";
-		$result = mysqli_query($data_base, $query) or die("in get " . mysqli_error($data_base));
-    	$arr = $result->fetch_all(MYSQLI_ASSOC);
+    	$data = array($_GET['USER_ID']);
+    	$stmt =$data_base->prepare("SELECT * FROM TASKS WHERE USER_ID = :userID");
+    	$stmt->execute($data);
+		$arr = $stmt->fetchAll();
     	echo '{"tasks": '.json_encode($arr).'}';
-    	$result->close();
 	}
 
 	function postHandler($data_base, $json){
-		$user = json_decode($json);
-		$query ="INSERT INTO TASKS (USER_ID, NAME, DESCRIPTION, HARDNESS)
-		VALUES (".$user->USER_ID.",'".$user->NAME."', '".$user->DESCRIPTION."', '".$user->HARDNESS."')";
-		$result = mysqli_query($data_base, $query) or die("in post " . mysqli_error($data_base));
+		$task = json_decode($json);
+		$data = array($task->USER_ID, $task->NAME, $task->DESCRIPTION, $task->HARDNESS);
+		$stmt =$data_base->prepare("INSERT INTO TASKS (USER_ID, NAME, DESCRIPTION, HARDNESS)
+		VALUES (:USER_ID, :NAME, :DESCRIPTION, :HARDNESS)");
+		$stmt->execute($data);
 	}
 
 	function putHandler($data_base, $json){
-		$user = json_decode($json);
-		$query ="UPDATE TASKS SET NAME='".$user->NAME."', DESCRIPTION='".$user->DESCRIPTION."', HARDNESS='".$user->HARDNESS."'WHERE ID=".$user->ID."";
-		$result = mysqli_query($data_base, $query) or die("in put " . mysqli_error($data_base));
+		$task = json_decode($json);
+		$data = array($task->NAME, $task->DESCRIPTION, $task->HARDNESS, $task->ID);
+		$stmt = $data_base->prepare("UPDATE TASKS SET NAME= :NAME, DESCRIPTION=:DESCRIPTION, HARDNESS=:HARDNESS WHERE ID=:ID");
+		$stmt->execute($data);
 	} 
 
 	function deleteHandler($data_base, $json){
-		$user = json_decode($json);
-		$query ="DELETE FROM TASKS WHERE ID=".$user->ID."";
-		$result = mysqli_query($data_base, $query) or die("in delete " . mysqli_error($data_base));
+		$task = json_decode($json);
+		$data = array($task->ID);
+		$stmt =$data_base->prepare("DELETE FROM TASKS WHERE ID=:id");
+		$stmt->execute($data);
 	}
 
 ?>

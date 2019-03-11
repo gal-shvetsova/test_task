@@ -26,8 +26,6 @@ export class UserList extends Component {
 
   createUserList() {
     const {users, selectedUser} = this.props; 
-        console.log("users",users);
-
     return users ?
     (
       <table border = "1">

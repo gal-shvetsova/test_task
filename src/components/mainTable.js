@@ -14,15 +14,8 @@ export class MainTable extends Component {
     .then(v => getConformity(v));
   }
 
-  createMainTable() {
-    const {conformity} = this.props; 
-    return 
-  }
-
-
   render() {
     const conformity = this.props.conformity;
-    console.log("conf",conformity);
      return (
       <div className="MainTable">
         <h4>Main Table</h4>
