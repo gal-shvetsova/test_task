@@ -23,17 +23,33 @@ export  class TaskEdit extends Component {
     fetch('task/', {
       method,
       body : JSON.stringify(task)})
-      .then(()=>{
-        fetch('task/?USER_ID='+ task.USER_ID )
-        .then(response => response.json())
-        .then(v => getTask(v,task.USER_ID));
+      .then(function(response) {
+        if (response.ok) {
+          fetch('task/?USER_ID='+ task.USER_ID)
+          .then(function(response){ 
+            if (response.ok){ 
+              response.json()
+              .then(v => getTask(v,task.USER_ID));
+            } else {
+              response.json()
+              .then(data => alert(data.error));
+            }
+          })
+        } else {
+          response.json()
+          .then(data => alert(data.error));
+        }
       })
-      .then(()=>{
+      .then(function(response){
+        if (response.ok) {
           fetch('/main')
           .then(response => response.json())
           .then(v => getConformity(v));
+        } else {
+          response.json()
+          .then(data => alert(data.error));
         }
-      );
+      });
       this.hide();
   }
 

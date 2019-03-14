@@ -21,16 +21,33 @@ export  class UserEdit extends Component {
     fetch('user/', {
       method,
       body : JSON.stringify(user)})
-      .then(()=>{
-        fetch('user/' )
-        .then(response => response.json())
-        .then(v => getUser(v))})
-        .then(()=>{
+      .then(function(response) {
+        if (response.ok) {
+          fetch('user/')
+          .then(function(response){ 
+            if (response.ok){ 
+              response.json()
+              .then(v => getUser(v));
+            } else {
+              response.json()
+              .then(data => alert(data.error));
+            }
+          })
+        } else {
+          response.json()
+          .then(data => alert(data.error));
+        }
+      })
+      .then(function(response){
+        if (response.ok) {
           fetch('/main')
           .then(response => response.json())
-          .then(v => getConformity(v))
+          .then(v => getConformity(v));
+        } else {
+          response.json()
+          .then(data => alert(data.error));
         }
-    );
+      });
     this.hide();
   }
 
@@ -74,7 +91,7 @@ const mapDispatchToProps = function (dispatch) {
     getUserEdit : actionCreators.getUserEdit,
     getTaskEdit : actionCreators.getTaskEdit,
     getUser : actionCreators.getUser,
-        getConformity : actionCreators.getConformity
+    getConformity : actionCreators.getConformity
   }, dispatch)
 }
 

@@ -12,8 +12,16 @@ export class TaskList extends Component {
   componentDidMount(){
     const {getTask} = this.props;
     fetch('task/')
-      .then(response => response.json())
-      .then(v => getTask(v))
+      .then(function(response){
+        if (response.ok) {
+          response.json()
+          .then(v => getTask(v))
+        }
+        else {
+          response.json()
+          .then(data => alert(data.error));
+        }
+      })
   }
   
   createTaskList() {
@@ -44,17 +52,28 @@ export class TaskList extends Component {
     const {getTask, getConformity} = this.props;
     fetch('task/', {
       method : "DELETE",
-      body : JSON.stringify(task)
-    }).then(()=>{
-      fetch('task/?USER_ID=' + task.USER_ID)
-      .then(response => response.json())
-      .then(v => getTask(v));
-    }).then(()=>{
+      body : JSON.stringify(user)
+    })
+    .then(function(response) {
+      if (response.ok) {
+          fetch('task/?USER_ID=' + + task.USER_ID)
+          .then(response => response.json())
+          .then(v => getTask(v));
+      } else {
+          response.json()
+          .then(data => alert(data.error));
+      }
+    })
+    .then(function(response){
+      if (response.ok) {
           fetch('/main')
           .then(response => response.json())
-          .then(v => getConformity(v))
-        }
-    );
+          .then(v => getConformity(v));
+      } else {
+          response.json()
+          .then(data => alert(data.error));
+      }
+    });
 
   }
 

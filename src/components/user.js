@@ -10,8 +10,18 @@ export class UserList extends Component {
     super(props);
     const getUser = this.props.getUser;
     fetch('user/')
-    .then(response => response.json())
-    .then(v => getUser(v));
+    .then(function(response){
+      if (response.ok) {
+        response.json().then(v => getUser(v));
+      }
+      else {
+        response.json()
+        .then(function(data){
+          alert(data.error);
+       //   location.reload();
+        })
+      }
+    })
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
@@ -57,17 +67,26 @@ export class UserList extends Component {
       method : "DELETE",
       body : JSON.stringify(user)
     })
-    .then(() => {
-      fetch('user/' )
-      .then(response => response.json())
-      .then(v => getUser(v));
+    .then(function(response) {
+      if (response.ok) {
+          fetch('user/')
+          .then(response => response.json())
+          .then(v => getUser(v));
+      } else {
+          response.json()
+          .then(data => alert(data.error));
+      }
     })
-    .then(()=>{
+    .then(function(response){
+      if (response.ok) {
           fetch('/main')
           .then(response => response.json())
-          .then(v => getConformity(v))
-        }
-        );
+          .then(v => getConformity(v));
+      } else {
+          response.json()
+          .then(data => alert(data.error));
+      }
+    });
   }
 
   userEdit(props,button){
@@ -95,10 +114,17 @@ export class UserList extends Component {
       this.props.getUserEdit({}, false);
       this.props.selectUser(USER_ID);
       fetch('task/?USER_ID='+USER_ID)
-        .then(response => response.json())
-        .then(v => getTask(v, USER_ID));
-      getTaskEdit({USER_ID : USER_ID}, -1, false);
-    };  
+        .then(function(response) {
+          if (response.ok) {
+              response.json()
+              .then(v => getTask(v, USER_ID));
+              getTaskEdit({USER_ID : USER_ID}, -1, false);
+          } else {
+              response.json()
+              .then(data => alert(data.error));
+          }
+        });
+      };  
   }
 
   setWrapperRef(node) {
